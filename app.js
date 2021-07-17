@@ -58,10 +58,10 @@ app.get('/', (req, res) => {
 });
 
 app.use('/user', userRouter);
-app.use('/channel', channelRouter);
-app.use('/post', postRouter);
-app.use('/comment', commentRouter);
-app.use('/chat', chatRouter);
+app.use('/channels', channelRouter);
+app.use('/posts', postRouter);
+app.use('/comments', commentRouter);
+app.use('/chats', chatRouter);
 
 //error router
 app.use((req, res, next) => {

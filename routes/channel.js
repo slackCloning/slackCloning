@@ -8,7 +8,7 @@ const Channel = require('../models/channel');
 const ChannelUserList = require('../models/channelUserlist');
 const User = require('../models/user');
 const Post = require('../models/post');
-
+const Comment = require('../models/comment');
 
 const router = express.Router();
 
@@ -64,18 +64,43 @@ router.get('/users', async (req, res) => {
 
 
 //게시글 조회
-router.get('/:id', async (req, res) => {
+router.get('/:channelId', async (req, res) => {
     try {
-        const { id } = req.params;
+        const { channelId } = req.params;
         const result = await Post.findAll({
-            where: { channelId: id },
-            order: [['createdAt', 'DESC']]
+            where: { channelId },
+            order: [['createdAt', 'DESC']],
         });
         console.log(result);
         res.json({ "ok": true, result });
     } catch (error) {
         console.error(error);
         res.status(500).json({ ok: false, message: "게시글목록 불러오기를 실패하였습니다." });
+    }
+});
+
+
+//게시글 상세 조회
+router.get('/:channelId/post/:postId', async (req, res) => {
+    try {
+        const { channelId, postId } = req.params;
+
+        const post = await Post.findOne({
+            where: {
+                [Op.and]: [{ id: postId }, { channelId }]
+            },
+            include: [{
+                model: Comment,
+                order: [['createdAt', 'DESC']]
+            }]
+        });
+        console.log(post);
+        console.log(post.Comments);
+
+        res.json({ ok: true, result: post });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ ok: false, message: '게시글 상세 조회를 실패하였습니다.' });
     }
 });
 
