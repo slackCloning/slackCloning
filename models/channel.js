@@ -7,7 +7,7 @@ module.exports = class Channel extends Sequelize.Model {
                 type: Sequelize.STRING,
                 allowNull: false,
                 unique: true,
-            },
+            }
         }, {
             sequelize,
             timestamps: true,
@@ -23,5 +23,6 @@ module.exports = class Channel extends Sequelize.Model {
     static associate(db) {
         db.Channel.belongsTo(db.User, { foreignKey: 'userId', sourceKey: 'id' });
         db.Channel.hasMany(db.Post, { foreignKey: 'channelId', sourceKey: 'id' });
+        db.Channel.hasMany(db.ChannelUserList, { foreignKey: 'channelId', sourceKey: 'id' });
     }
 }
