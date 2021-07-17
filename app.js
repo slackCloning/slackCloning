@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-app.use('/user', userRouter);
+app.use('/users', userRouter);
 app.use('/channels', channelRouter);
 app.use('/posts', postRouter);
 app.use('/comments', commentRouter);
