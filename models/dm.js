@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+
 const User = require("./user");
 
 module.exports = class Dm extends Sequelize.Model {
@@ -6,13 +7,16 @@ module.exports = class Dm extends Sequelize.Model {
         return super.init({
             userId: {
                 type: Sequelize.INTEGER,
+                allowNull: false,
                 references: {
                     model: User,
                     key: 'id'
                 }
+
             },
             otherUserId: {
                 type: Sequelize.INTEGER,
+                allowNull: false,
                 references: {
                     model: User,
                     key: 'id'
@@ -31,8 +35,6 @@ module.exports = class Dm extends Sequelize.Model {
     }
 
     static associate(db) {
-        // db.Dm.belongsToMany(db.User, { through: 'Dm', as: 'Parents', foreignKey: 'userId', targetKey: 'id' });
-        // db.Dm.belongsToMany(db.User, { through: 'Dm', as: 'Siblings', foreignKey: 'otherUserId', targetKey: 'id' });
         db.Dm.hasMany(db.Chat, { foreignKey: 'dmsId', sourceKey: 'id' });
     }
 }

@@ -135,7 +135,7 @@ router.post('/:id', upload.single('img'), async (req, res) => {
         const { id: channelId } = req.params;
         const { title, description, userId } = req.body;
         let img = req.file ? `/img/${req.file.filename}` : "/img/default.jpg";
-        const channel = await Post.create({
+        await Post.create({
             title,
             description,
             img,
