@@ -35,7 +35,7 @@ router.get('/:dmsId', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { userId, otherUserId } = req.body;
-
+        console.log("userId!!", userId, otherUserId);
         const [result, metadata] = await sequelize.query(`SELECT * FROM dms where (userId = ${userId} and otherUserId = ${otherUserId}) 
                                                             OR (userId = ${otherUserId} and otherUserId = ${userId})`);
         if (result.length) {

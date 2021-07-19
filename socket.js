@@ -27,4 +27,16 @@ module.exports = (server, app) => {
         });
     });
 
+    chat.on('connection', (socket) => {
+        socket.on('disconnect', () => {
+            clearInterval(socket.interval);
+        });
+        socket.on('error', (error) => {
+            console.error(error);
+        });
+        socket.on('reply', (data) => {
+            console.log(data);
+        });
+    });
+
 };

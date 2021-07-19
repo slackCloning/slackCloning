@@ -10,6 +10,7 @@ const User = require('../models/user');
 const Post = require('../models/post');
 const Comment = require('../models/comment');
 
+
 const router = express.Router();
 
 try {
@@ -80,6 +81,23 @@ router.get('/:channelId', async (req, res) => {
         res.status(500).json({ ok: false, message: "게시글목록 불러오기를 실패하였습니다." });
     }
 });
+
+
+//게시글 조회
+router.get('/:channelId/users', async (req, res) => {
+    try {
+        const { channelId } = req.params;
+        const result = await ChannelUserList.findAll({
+            where: { channelId }
+        });
+        console.log(result);
+        res.json({ "ok": true, result });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ ok: false, message: "채널 사용자 목록 불러오기를 실패하였습니다." });
+    }
+});
+
 
 
 //게시글 상세 조회

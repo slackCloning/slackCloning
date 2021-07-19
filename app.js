@@ -35,6 +35,8 @@ sequelize.sync({ force: false })
         console.error(error);
     });
 
+
+
 //middleware
 app.use(morgan('dev'));
 app.use('/', express.static(path.join(__dirname, 'public')));
@@ -45,10 +47,8 @@ app.use(express.urlencoded({ extend: true }));
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-app.use(
-    cors({ origin: '*', credentials: true, }
-    ));
 
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
@@ -80,4 +80,4 @@ const server = app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트 대기중...');
 });
 
-webSocket(server, app);
+// webSocket(server, app);
