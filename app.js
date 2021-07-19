@@ -9,7 +9,7 @@ const cors = require('cors');
 const { sequelize } = require('./models');
 
 const { swaggerUi, specs } = require('./swagger/swagger');
-const userRouter = require('./routes/user');
+const userRouter = require('./routes/users');
 const channelRouter = require('./routes/channel');
 const postRouter = require('./routes/post');
 const commentRouter = require('./routes/comment');
@@ -20,7 +20,7 @@ dotenv.config();
 
 const app = express();
 
-app.set('port', process.env.PORT || 8005);
+app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'html');
 nunjucks.configure('views', {
     express: app,

@@ -1,7 +1,10 @@
 const express = require('express');
 const { Op } = require("sequelize");
 const { User } = require("../models");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
+
+
 router.post('/createAccount', async (req, res) => {
     const { email, nickname, password, } = req.body;
     console.log({ User })
@@ -20,7 +23,8 @@ router.post('/createAccount', async (req, res) => {
     await User.create({ email, nickname, password });
     res.json({ "ok": true });
 });
-router.post("/auth", async (req, res) => {
+
+router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({
         where: {
@@ -29,14 +33,39 @@ router.post("/auth", async (req, res) => {
     });
     // NOTE: 인증 메세지는 자세히 설명하지 않는것을 원칙으로 한다: https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#authentication-responses
     if (!user || password !== user.password) {
-        res.status(400).send({
-            errorMessage: "이메일 또는 패스워드가 틀렸습니다.",
+        res.status(400).json({
+            "ok": false
         });
         return;
     }
-    res.send({
-        token: jwt.sign({ userId: user.userId }, "customized-secret-key"),
+    const token = jwt.sign({ email}, "secret-key")
+    res.json({
+        "ok": true,
+        "result": token,
+        "email":email
     });
 });
+
+router.get('/me', async (req,res) => {
+    const Auth_token = req.headers.authorization.split('Bearer ')[1]
+    console.log(Auth_token)
+
+    try{
+        const { email } = jwt.verify(Auth_token, "secret-key");
+        console.log(email)
+        const user = await User.findOne({
+            where: {
+                email,
+            },
+        });
+        console.log(user)
+        res.send(user)
+        
+    }catch(err){
+        res.status(401).send({
+            errorMessage: "로그인 후 이용 가능한 기능입니다.",
+          });
+    }
+})
 
 module.exports = router;
