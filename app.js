@@ -80,4 +80,4 @@ const server = app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트 대기중...');
 });
 
-// webSocket(server, app);
+webSocket(server, app);
