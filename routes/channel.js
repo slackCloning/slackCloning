@@ -39,6 +39,8 @@ router.get('/', async (req, res) => {
         const result = await Channel.findAll({
             order: [['createdAt', 'DESC']]
         });
+        const io = req.app.get('io');
+        io.of('workspace').emit("main", result);
         res.json({ "ok": true, result });
     } catch (error) {
         console.error(error);

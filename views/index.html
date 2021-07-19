@@ -9,7 +9,18 @@
 </head>
 
 <body>
-    <h1>Main</h1>
+    <div>F12를 눌러 console 탭과 network 탭을 확인하세요.</div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io.connect('http://localhost:8005', {
+            path: '/socket.io',
+            transports: ['websocket'],
+        });
+        socket.on('news', function (data) {
+            console.log(data);
+            socket.emit('reply', 'Hello Node.js');
+        })
+    </script>
 </body>
 
 </html>

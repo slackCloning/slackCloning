@@ -17,7 +17,7 @@ const chatRouter = require('./routes/chat');
 
 
 dotenv.config();
-
+const webSocket = require('./socket');
 const app = express();
 
 app.set('port', process.env.PORT || 3000);
@@ -76,6 +76,8 @@ app.use((error, req, res, next) => {
     res.render('error');
 });
 
-app.listen(app.get('port'), () => {
+const server = app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트 대기중...');
 });
+
+webSocket(server, app);
