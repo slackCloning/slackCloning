@@ -51,9 +51,6 @@ router.get('/', async (req, res) => {
 
         //     order: [['createdAt', 'DESC']]
         // });
-        console.log(result);
-        const io = req.app.get('io');
-        io.of('workspace').emit("main", result);
         res.json({ "ok": true, result });
     } catch (error) {
         console.error(error);
@@ -154,6 +151,11 @@ router.post('/', async (req, res) => {
                 channelId,
             });
         }
+
+        console.log(result);
+        const io = req.app.get('io');
+        io.of('workspace').emit("main", result);
+
         res.json({ ok: true, message: '채널등록을 성공하였습니다.' });
     } catch (error) {
         console.error(error);

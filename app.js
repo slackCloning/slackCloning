@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const dotenv = require('dotenv');
 const nunjucks = require('nunjucks');
 const path = require('path');
@@ -46,7 +47,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extend: true }));
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
-
+const sessionMiddleware = session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+    },
+});
+app.use(sessionMiddleware);
 
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
@@ -56,6 +66,7 @@ app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.get('/', (req, res) => {
     res.render('index');
 });
+
 
 app.use('/users', userRouter);
 app.use('/channels', channelRouter);
@@ -80,4 +91,4 @@ const server = app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트 대기중...');
 });
 
-webSocket(server, app);
+webSocket(server, app, sessionMiddleware);

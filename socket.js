@@ -1,6 +1,6 @@
 const SocketIO = require('socket.io');
 
-module.exports = (server, app) => {
+module.exports = (server, app, sessionMiddleware) => {
     const io = SocketIO(server, {
         path: '/socket.io',
     });
@@ -10,6 +10,11 @@ module.exports = (server, app) => {
     const workspace = io.of('/workspace');
     const channel = io.of('/channel');
     const chat = io.of('/chat');
+
+    // io.use((socket, next) => {
+    //     console.log(socket.request);
+    //     sessionMiddleware(socket.request, socket.request.res, next);
+    // });
 
     workspace.on('connection', (socket) => {
         const req = socket.request;

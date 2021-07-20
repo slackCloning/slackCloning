@@ -38,19 +38,18 @@ router.post("/login", async (req, res) => {
         });
         return;
     }
-    const token = jwt.sign({ email}, "secret-key")
+    const token = jwt.sign({ email }, "secret-key")
     res.json({
         "ok": true,
         "result": token,
-        "email":email
+        "email": email
     });
 });
 
-router.get('/me', async (req,res) => {
+router.get('/me', async (req, res) => {
     const Auth_token = req.headers.authorization.split('Bearer ')[1]
-    console.log(Auth_token)
 
-    try{
+    try {
         const { email } = jwt.verify(Auth_token, "secret-key");
         console.log(email)
         const user = await User.findOne({
@@ -59,12 +58,13 @@ router.get('/me', async (req,res) => {
             },
         });
         console.log(user)
+        res.cookie("user", user);
         res.send(user)
-        
-    }catch(err){
+
+    } catch (err) {
         res.status(401).send({
             errorMessage: "로그인 후 이용 가능한 기능입니다.",
-          });
+        });
     }
 })
 

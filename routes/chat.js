@@ -59,6 +59,8 @@ router.post('/', async (req, res) => {
 
 router.post('/:dmsId', async (req, res) => {
     try {
+        console.log("안들어오나??");
+        req.session.user = 1;
         const { dmsId } = req.params;
         const { userId, chat } = req.body;
 
@@ -66,10 +68,10 @@ router.post('/:dmsId', async (req, res) => {
             dmsId,
             chat,
         });
-
+        console.log(req.session);
         const io = req.app.get('io');
         io.of('chat').emit("message", result.chat);
-        res.json({ ok: true, result });
+        res.json({ ok: true, result, user: res.session });
     } catch (error) {
         console.error(error);
         res.status(500).json({ ok: false, message: '채팅쓰기를 실패하였습니다.' });
