@@ -19,7 +19,7 @@ module.exports = class Dm extends Sequelize.Model {
                 allowNull: false,
                 references: {
                     model: User,
-                    key: 'id'
+                    key: 'id',
                 }
             }
         }, {
@@ -36,5 +36,7 @@ module.exports = class Dm extends Sequelize.Model {
 
     static associate(db) {
         db.Dm.hasMany(db.Chat, { foreignKey: 'dmsId', sourceKey: 'id' });
+        db.Dm.belongsTo(db.User, { foreignKey: 'userId', targetKey: 'id' });
+        db.Dm.belongsTo(db.User, { foreignKey: 'otherUserId', targetKey: 'id' });
     }
 }
