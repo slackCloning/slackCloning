@@ -7,19 +7,23 @@ const router = express.Router();
 
 
 router.post('/dupCheck', async (req, res) => {
-    const { email } = req.body;
-    console.log(email)
-    const existsUsers = await User.findAll({
-        where: {email},
-    });
-    if (existsUsers.length) {
-        res.status(400).json({
-            "ok": false,
+    try {
+        const { email } = req.body;
+        console.log(email)
+        const existsUsers = await User.findAll({
+            where: { email },
         });
-        return;
-    }
+        if (existsUsers.length) {
+            res.status(400).json({
+                "ok": false,
+            });
+            return;
+        }
 
-    res.json({ "ok": true });
+        res.json({ "ok": true });
+    } catch (error) {
+        console.error(error);
+    }
 })
 
 router.post('/createAccount', async (req, res) => {
@@ -48,7 +52,7 @@ router.post("/login", async (req, res) => {
             email,
         },
     });
-    
+
     if (!user || password !== user.password) {
         res.status(400).json({
             "ok": false

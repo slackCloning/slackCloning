@@ -7,7 +7,7 @@ const Chat = require('../models/chat');
 const router = express.Router();
 
 
-router.get('/:dmsId', async (req, res) => {
+router.post('/:dmsId', async (req, res) => {
     try {
         const { dmsId } = req.params
         const { userId } = req.body;
@@ -35,13 +35,15 @@ router.get('/:dmsId', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { userId, otherUserId } = req.body;
-        console.log("userId!!", userId, otherUserId);
         const [result, metadata] = await sequelize.query(`SELECT * FROM dms where (userId = ${userId} and otherUserId = ${otherUserId}) 
                                                             OR (userId = ${otherUserId} and otherUserId = ${userId})`);
         if (result.length) {
             return res.json({ ok: false, message: '이미 DM으로 등록 된 사용자입니다.' });
         }
-
+        await Dm.create({
+            userId: otherUserId,
+            otherUserId: userId,
+        });
         const dm = await Dm.create({
             userId,
             otherUserId,

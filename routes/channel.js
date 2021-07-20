@@ -6,9 +6,10 @@ const { Op } = require('sequelize');
 
 const Channel = require('../models/channel');
 const ChannelUserList = require('../models/channelUserlist');
-const User = require('../models/user');
+const Dms = require('../models/dm');
 const Post = require('../models/post');
 const Comment = require('../models/comment');
+const User = require('../models/user');
 
 
 const router = express.Router();
@@ -35,7 +36,7 @@ const upload = multer({
 
 
 //채널 조회
-router.get('/', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const { userId } = req.body;
         const result = await ChannelUserList.findAll({
@@ -60,9 +61,15 @@ router.get('/', async (req, res) => {
 
 
 // 사용자 조회
-router.get('/users', async (req, res) => {
+router.post('/users', async (req, res) => {
     try {
-        const result = await User.findAll({
+        const { userId } = req.body;
+        console.log("userId!!", userId);
+        const result = await Dms.findAll({
+            where: { userId },
+            include: {
+                model: User,
+            },
             order: [['createdAt', 'DESC']]
         });
         console.log(result);
@@ -92,7 +99,6 @@ router.get('/:channelId', async (req, res) => {
 });
 
 
-//게시글 조회
 router.get('/:channelId/users', async (req, res) => {
     try {
         const { channelId } = req.params;

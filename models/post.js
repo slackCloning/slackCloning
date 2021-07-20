@@ -6,7 +6,6 @@ module.exports = class Post extends Sequelize.Model {
             title: {
                 type: Sequelize.STRING,
                 allowNull: false,
-                unique: true,
             },
             description: {
                 type: Sequelize.STRING,
