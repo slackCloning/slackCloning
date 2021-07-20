@@ -5,6 +5,23 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 
+
+router.post('/dupCheck', async (req, res) => {
+    const { email } = req.body;
+    console.log(email)
+    const existsUsers = await User.findAll({
+        where: {email},
+    });
+    if (existsUsers.length) {
+        res.status(400).json({
+            "ok": false,
+        });
+        return;
+    }
+
+    res.json({ "ok": true });
+})
+
 router.post('/createAccount', async (req, res) => {
     const { email, nickname, password, } = req.body;
     console.log({ User })
@@ -31,7 +48,7 @@ router.post("/login", async (req, res) => {
             email,
         },
     });
-    // NOTE: 인증 메세지는 자세히 설명하지 않는것을 원칙으로 한다: https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#authentication-responses
+    
     if (!user || password !== user.password) {
         res.status(400).json({
             "ok": false
