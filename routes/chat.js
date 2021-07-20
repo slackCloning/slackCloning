@@ -66,7 +66,9 @@ router.post('/:dmsId', async (req, res) => {
             dmsId,
             chat,
         });
-        console.log(chat);
+
+        const io = req.app.get('io');
+        io.of('chat').emit("message", result.chat);
         res.json({ ok: true, result });
     } catch (error) {
         console.error(error);

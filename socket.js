@@ -28,6 +28,9 @@ module.exports = (server, app) => {
     });
 
     chat.on('connection', (socket) => {
+        const req = socket.request;
+        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        console.log('Chat 접속!', ip, socket.id, req.ip);
         socket.on('disconnect', () => {
             clearInterval(socket.interval);
         });

@@ -37,9 +37,21 @@ const upload = multer({
 //채널 조회
 router.get('/', async (req, res) => {
     try {
-        const result = await Channel.findAll({
-            order: [['createdAt', 'DESC']]
-        });
+        const { userId } = req.body;
+        const result = await ChannelUserList.findAll({
+            where: { userId },
+            order: [['createdAt', 'DESC']],
+            include: {
+                model: Channel,
+                order: [['createdAt', 'DESC']]
+            },
+        })
+
+        // const result = await Channel.findAll({
+
+        //     order: [['createdAt', 'DESC']]
+        // });
+        console.log(result);
         const io = req.app.get('io');
         io.of('workspace').emit("main", result);
         res.json({ "ok": true, result });
