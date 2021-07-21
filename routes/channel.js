@@ -35,58 +35,18 @@ const upload = multer({
 });
 
 
-//채널 조회
-router.post('/', async (req, res) => {
+
+router.get('/allUsers', async (req, res) => {
     try {
-        const { userId } = req.body;
-        const result = await ChannelUserList.findAll({
-            where: { userId },
-            order: [['createdAt', 'DESC']],
-            include: {
-                model: Channel,
-                order: [['createdAt', 'DESC']]
-            },
-        })
-
-        // const result = await Channel.findAll({
-
-        //     order: [['createdAt', 'DESC']]
-        // });
-        res.json({ "ok": true, result });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ ok: false, message: "채널목록 불러오기를 실패하였습니다." });
-    }
-});
-
-
-// 사용자 조회
-router.post('/users', async (req, res) => {
-    try {
-        const { userId } = req.body;
-        const result = await Dms.findAll({
-            where: { userId },
-            include: [
-                {
-                    model: User,
-                    as: 'User',
-                },
-                {
-                    model: User,
-                    as: 'OtherUser',
-                }
-            ],
+        const result = await User.findAll({
             order: [['createdAt', 'DESC']]
         });
-        console.log(result);
         res.json({ "ok": true, result });
     } catch (error) {
         console.error(error);
         res.status(500).json({ ok: false, message: "사용자목록 불러오기를 실패하였습니다." });
     }
 });
-
-
 
 //게시글 조회
 router.get('/:channelId', async (req, res) => {
@@ -105,6 +65,7 @@ router.get('/:channelId', async (req, res) => {
 });
 
 
+//채널 사용자 조회
 router.get('/:channelId/users', async (req, res) => {
     try {
         const { channelId } = req.params;
@@ -150,6 +111,34 @@ router.get('/:channelId/post/:postId', async (req, res) => {
 });
 
 
+
+// DM사용자 조회
+router.post('/users', async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const result = await Dms.findAll({
+            where: { userId },
+            include: [
+                {
+                    model: User,
+                    as: 'User',
+                },
+                {
+                    model: User,
+                    as: 'OtherUser',
+                }
+            ],
+            order: [['createdAt', 'DESC']]
+        });
+        console.log(result);
+        res.json({ "ok": true, result });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ ok: false, message: "사용자목록 불러오기를 실패하였습니다." });
+    }
+});
+
+
 //채널 만들기
 router.post('/', async (req, res) => {
     try {
@@ -160,16 +149,15 @@ router.post('/', async (req, res) => {
         });
         const channelId = channel.id;
         for (let i = 0; i < userList.length; i++) {
-            const [userId] = userList[i];
             await ChannelUserList.create({
-                userId,
+                userId: userList[i],
                 channelId,
             });
         }
 
-        console.log(result);
-        const io = req.app.get('io');
-        io.of('workspace').emit("main", result);
+        // console.log(result);
+        // const io = req.app.get('io');
+        // io.of('workspace').emit("main", result);
 
         res.json({ ok: true, message: '채널등록을 성공하였습니다.' });
     } catch (error) {
@@ -177,6 +165,33 @@ router.post('/', async (req, res) => {
         res.status(500).json({ ok: false, message: '채널등록을 실패하였습니다.' });
     }
 });
+
+
+//채널 조회
+router.post('/lists', async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const result = await ChannelUserList.findAll({
+            where: { userId },
+            order: [['createdAt', 'DESC']],
+            include: {
+                model: Channel,
+                order: [['createdAt', 'DESC']]
+            },
+        })
+
+        // const result = await Channel.findAll({
+
+        //     order: [['createdAt', 'DESC']]
+        // });
+        res.json({ "ok": true, result });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ ok: false, message: "채널목록 불러오기를 실패하였습니다." });
+    }
+});
+
+
 
 //게시글 만들기
 router.post('/:id', upload.single('img'), async (req, res) => {

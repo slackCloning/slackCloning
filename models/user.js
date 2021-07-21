@@ -11,7 +11,6 @@ module.exports = class User extends Sequelize.Model {
             nickname: {
                 type: Sequelize.STRING,
                 allowNull: false,
-                unique: true,
             },
             password: {
                 type: Sequelize.STRING,
@@ -35,9 +34,9 @@ module.exports = class User extends Sequelize.Model {
         db.User.hasMany(db.Comment, { foreignKey: 'userId', sourceKey: 'id' });
         db.User.hasMany(db.Comment, { foreignKey: 'userId', sourceKey: 'id' });
         db.User.hasMany(db.ChannelUserList, { foreignKey: 'userId', sourceKey: 'id' });
+        db.User.hasMany(db.Chat, { foreignKey: 'userId', sourceKey: 'id' });
 
         db.User.hasMany(db.Dm, { as: 'User', foreignKey: 'userId', sourceKey: 'id' });
         db.User.hasMany(db.Dm, { as: 'OtherUser', foreignKey: 'otherUserId', sourceKey: 'id' });
-
     }
 }

@@ -11,13 +11,11 @@ router.get('/me', async (req, res) => {
 
     try {
         const { email } = jwt.verify(Auth_token, "secret-key");
-        console.log(email)
         const user = await User.findOne({
             where: {
                 email,
             },
         });
-        console.log(user)
         res.cookie("user", user);
         res.send(user)
 
@@ -35,7 +33,7 @@ router.post('/dupCheck', async (req, res) => {
             where: { email },
         });
         if (existsUsers) {
-            res.status(400).json({
+            res.json({
                 "ok": false,
                 "message": "중복된 이메일입니다."
             });
@@ -52,14 +50,13 @@ router.post('/createAccount', async (req, res) => {
     const { email, nickname, password, } = req.body;
     console.log({ User })
     // email or nickname이 동일한게 이미 있는지 확인하기 위해 가져온다.
-    const existsUsers = await User.findAll({
-        where: {
-            [Op.or]: [{ email }, { nickname }],
-        },
+    const existsUsers = await User.findOne({
+        where: { email },
     });
-    if (existsUsers.length) {
-        res.status(400).json({
+    if (existsUsers) {
+        res.json({
             "ok": false,
+            "message": "이메일 혹은 닉네임이 중복 됩니다.",
         });
         return;
     }
@@ -76,12 +73,14 @@ router.post("/login", async (req, res) => {
     });
 
     if (!user || password !== user.password) {
-        res.status(400).json({
-            "ok": false
+        res.json({
+            "ok": false,
+            "message": "이메일 혹은 비밀번호가 일치 하지 않습니다."
         });
         return;
     }
-    const token = jwt.sign({ email }, "secret-key")
+    const token = jwt.sign({ email }, "secret-key");
+    console.log("token!!!!!!!", token);
     res.json({
         "ok": true,
         "result": token,
