@@ -6,10 +6,6 @@ module.exports = class ChannelUserList extends Sequelize.Model {
             userId: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-            },
-            nickname: {
-                type: Sequelize.STRING,
-                allowNull: false,
             }
         }, {
             sequelize,
@@ -25,5 +21,6 @@ module.exports = class ChannelUserList extends Sequelize.Model {
 
     static associate(db) {
         db.ChannelUserList.belongsTo(db.Channel, { foreignKey: 'channelId', sourceKey: 'id' });
+        db.ChannelUserList.belongsTo(db.User, { foreignKey: 'userId', sourceKey: 'id' });
     }
 }

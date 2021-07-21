@@ -34,9 +34,10 @@ module.exports = class User extends Sequelize.Model {
         db.User.hasMany(db.Post, { foreignKey: 'userId', sourceKey: 'id' });
         db.User.hasMany(db.Comment, { foreignKey: 'userId', sourceKey: 'id' });
         db.User.hasMany(db.Comment, { foreignKey: 'userId', sourceKey: 'id' });
+        db.User.hasMany(db.ChannelUserList, { foreignKey: 'userId', sourceKey: 'id' });
 
-        db.User.hasMany(db.Dm, { as: 'Parents', foreignKey: 'userId', sourceKey: 'id' });
-        db.User.hasMany(db.Dm, { as: 'Siblings', foreignKey: 'otherUserId', sourceKey: 'id' });
+        db.User.hasMany(db.Dm, { as: 'User', foreignKey: 'userId', sourceKey: 'id' });
+        db.User.hasMany(db.Dm, { as: 'OtherUser', foreignKey: 'otherUserId', sourceKey: 'id' });
 
     }
 }

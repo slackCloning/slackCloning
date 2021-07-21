@@ -36,7 +36,7 @@ module.exports = class Dm extends Sequelize.Model {
 
     static associate(db) {
         db.Dm.hasMany(db.Chat, { foreignKey: 'dmsId', sourceKey: 'id' });
-        db.Dm.belongsTo(db.User, { foreignKey: 'userId', targetKey: 'id' });
-        db.Dm.belongsTo(db.User, { foreignKey: 'otherUserId', targetKey: 'id' });
+        db.Dm.belongsTo(db.User, { as: 'User', foreignKey: 'userId', targetKey: 'id' });
+        db.Dm.belongsTo(db.User, { as: 'OtherUser', foreignKey: 'otherUserId', targetKey: 'id' });
     }
 }

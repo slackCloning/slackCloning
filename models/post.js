@@ -3,11 +3,7 @@ const Sequelize = require('sequelize');
 module.exports = class Post extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
-            title: {
-                type: Sequelize.STRING,
-                allowNull: false,
-            },
-            description: {
+            chat: {
                 type: Sequelize.STRING,
             },
             img: {

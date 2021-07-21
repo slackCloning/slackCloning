@@ -64,12 +64,18 @@ router.post('/', async (req, res) => {
 router.post('/users', async (req, res) => {
     try {
         const { userId } = req.body;
-        console.log("userId!!", userId);
         const result = await Dms.findAll({
             where: { userId },
-            include: {
-                model: User,
-            },
+            include: [
+                {
+                    model: User,
+                    as: 'User',
+                },
+                {
+                    model: User,
+                    as: 'OtherUser',
+                }
+            ],
             order: [['createdAt', 'DESC']]
         });
         console.log(result);
@@ -103,7 +109,11 @@ router.get('/:channelId/users', async (req, res) => {
     try {
         const { channelId } = req.params;
         const result = await ChannelUserList.findAll({
-            where: { channelId }
+            where: { channelId },
+            include: [{
+                model: User,
+                order: [['createdAt', 'DESC']]
+            }]
         });
         console.log(result);
         res.json({ "ok": true, result });
@@ -150,10 +160,9 @@ router.post('/', async (req, res) => {
         });
         const channelId = channel.id;
         for (let i = 0; i < userList.length; i++) {
-            const [userId, nickname] = userList[i];
+            const [userId] = userList[i];
             await ChannelUserList.create({
                 userId,
-                nickname,
                 channelId,
             });
         }
@@ -173,11 +182,10 @@ router.post('/', async (req, res) => {
 router.post('/:id', upload.single('img'), async (req, res) => {
     try {
         const { id: channelId } = req.params;
-        const { title, description, userId } = req.body;
+        const { chat, userId } = req.body;
         let img = req.file ? `/img/${req.file.filename}` : "/img/default.jpg";
         await Post.create({
-            title,
-            description,
+            chat,
             img,
             channelId,
             userId

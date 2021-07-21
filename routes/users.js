@@ -6,22 +6,44 @@ const router = express.Router();
 
 
 
+router.get('/me', async (req, res) => {
+    const Auth_token = req.headers.authorization.split('Bearer ')[1]
+
+    try {
+        const { email } = jwt.verify(Auth_token, "secret-key");
+        console.log(email)
+        const user = await User.findOne({
+            where: {
+                email,
+            },
+        });
+        console.log(user)
+        res.cookie("user", user);
+        res.send(user)
+
+    } catch (err) {
+        res.status(401).send({
+            errorMessage: "로그인 후 이용 가능한 기능입니다.",
+        });
+    }
+})
+
 router.post('/dupCheck', async (req, res) => {
     try {
         const { email } = req.body;
-        console.log(email)
-        const existsUsers = await User.findAll({
+        const existsUsers = await User.findOne({
             where: { email },
         });
-        if (existsUsers.length) {
+        if (existsUsers) {
             res.status(400).json({
                 "ok": false,
+                "message": "중복된 이메일입니다."
             });
             return;
-        }
-
+        };
         res.json({ "ok": true });
     } catch (error) {
+        res.json({ "ok": false, "message": "중복체크에 실패하였습니다." });
         console.error(error);
     }
 })
@@ -67,26 +89,6 @@ router.post("/login", async (req, res) => {
     });
 });
 
-router.get('/me', async (req, res) => {
-    const Auth_token = req.headers.authorization.split('Bearer ')[1]
 
-    try {
-        const { email } = jwt.verify(Auth_token, "secret-key");
-        console.log(email)
-        const user = await User.findOne({
-            where: {
-                email,
-            },
-        });
-        console.log(user)
-        res.cookie("user", user);
-        res.send(user)
-
-    } catch (err) {
-        res.status(401).send({
-            errorMessage: "로그인 후 이용 가능한 기능입니다.",
-        });
-    }
-})
 
 module.exports = router;
