@@ -47,23 +47,23 @@
 
   
 ### 4.2. 사용자 요청
-- **로그인** :pushpin: [코드 확인](https://github.com/slackCloning/slackCloning/blob/main/routes/users.js#L67)
+- **로그인** :pushpin: [코드 확인](https://github.com/slackCloning/slackCloning/blob/main/routes/users.js#L40)
   - passport 모듈을 이용해서 로그인 기능을 구현합니다.
   - 로그인을 성공할 시, 클라이언트에게 jwt 토큰을 전달합니다
 
-- **회원가입** :pushpin: [코드 확인]()
+- **회원가입** :pushpin: [코드 확인](https://github.com/slackCloning/slackCloning/blob/main/routes/users.js#L20)
   - 회원가입에 들어오는 데이터를 validate라는 middleware로 유효성 검사를 합니다.
   - 유효성 검사를 통과하면 비밀번호를 암호화한 후 DB에 저장합니다.
   
-- **채널생성** :pushpin: [코드 확인]()
+- **채널생성** :pushpin: [코드 확인](https://github.com/slackCloning/slackCloning/blob/main/routes/channel.js#L138)
   - 클라이언트로부터 채널이름, 사용자리스트를 전달 받아, Channel 과 ChannelUserList에 데이터를 insert합니다.
   - 채널등록에 성공한 후, 생성한 데이터를 소켓통신으로 클라이언트에 보냅니다.
   
-- **Direct Message 보내기** :pushpin: [코드 확인]()
+- **Direct Message 보내기** :pushpin: [코드 확인](https://github.com/slackCloning/slackCloning/blob/main/routes/chat.js#50)
   - 먼저, 이전에 DM을 보낸 적이 있는 지 체크를 합니다.
   - 만약, 보낸 적이 없다면 DM테이블에 사용자들을 추가합니다.
   
-- **게시글 작성하기** :pushpin: [코드 확인]()
+- **게시글 작성하기** :pushpin: [코드 확인](https://github.com/slackCloning/slackCloning/blob/main/routes/channel.js#L199)
   - 필요한 데이터를 클라이언트로부터 전달 받습니다. 특별히 어떤 채널에 종속되어지는 데이터이기 때문에 채널 아이디를 전달 받아야 합니다.
 
 </div>
