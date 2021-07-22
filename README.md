@@ -59,7 +59,7 @@
   - 클라이언트로부터 채널이름, 사용자리스트를 전달 받아, Channel 과 ChannelUserList에 데이터를 insert합니다.
   - 채널등록에 성공한 후, 생성한 데이터를 소켓통신으로 클라이언트에 보냅니다.
   
-- **Direct Message 보내기** :pushpin: [코드 확인](https://github.com/slackCloning/slackCloning/blob/main/routes/chat.js#50)
+- **Direct Message 보내기** :pushpin: [코드 확인](https://github.com/slackCloning/slackCloning/blob/main/routes/chat.js#L50)
   - 먼저, 이전에 DM을 보낸 적이 있는 지 체크를 합니다.
   - 만약, 보낸 적이 없다면 DM테이블에 사용자들을 추가합니다.
   
