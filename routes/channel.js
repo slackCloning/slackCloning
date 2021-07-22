@@ -56,7 +56,6 @@ router.get('/:channelId', async (req, res) => {
             where: { channelId },
             order: [['createdAt', 'DESC']],
         });
-        console.log(result);
         res.json({ "ok": true, result });
     } catch (error) {
         console.error(error);
@@ -76,7 +75,7 @@ router.get('/:channelId/users', async (req, res) => {
                 order: [['createdAt', 'DESC']]
             }]
         });
-        console.log(result);
+
         res.json({ "ok": true, result });
     } catch (error) {
         console.error(error);
@@ -100,9 +99,6 @@ router.get('/:channelId/post/:postId', async (req, res) => {
                 order: [['createdAt', 'DESC']]
             }]
         });
-        console.log(post);
-        console.log(post.Comments);
-
         res.json({ ok: true, result: post });
     } catch (error) {
         console.error(error);
@@ -130,7 +126,6 @@ router.post('/users', async (req, res) => {
             ],
             order: [['createdAt', 'DESC']]
         });
-        console.log(result);
         res.json({ "ok": true, result });
     } catch (error) {
         console.error(error);
@@ -155,9 +150,16 @@ router.post('/', async (req, res) => {
             });
         }
 
-        // console.log(result);
-        // const io = req.app.get('io');
-        // io.of('workspace').emit("main", result);
+        const result = await ChannelUserList.findAll({
+            where: { channelId },
+            include: [{
+                model: User,
+                order: [['createdAt', 'DESC']]
+            }]
+        });
+
+        const io = req.app.get('io');
+        io.of('workspace').emit("main", result);
 
         res.json({ ok: true, message: '채널등록을 성공하였습니다.' });
     } catch (error) {
@@ -236,15 +238,12 @@ router.delete('/:channelId', async (req, res) => {
 router.delete('/:channelId/post/:postId', upload.single('img'), async (req, res) => {
     try {
         const { channelId, postId } = req.params;
-
         const { userId } = req.body;
-
         const post = await Post.findOne({
             where: {
                 [Op.and]: [{ id: postId }, { channelId }]
             }
         });
-        console.log(post.userId);
 
         if (post.userId !== +userId) {
             return res.json({ ok: false, message: '작성자만 게시글을 지울 수 있습니다.' });

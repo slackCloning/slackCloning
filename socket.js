@@ -1,6 +1,7 @@
 const SocketIO = require('socket.io');
+const Chat = require('./models/chat');
 
-module.exports = (server, app, sessionMiddleware) => {
+module.exports = (server, app) => {
     const io = SocketIO(server, {
         path: '/socket.io',
     });
@@ -11,39 +12,33 @@ module.exports = (server, app, sessionMiddleware) => {
     const channel = io.of('/channel');
     const chat = io.of('/chat');
 
-    // io.use((socket, next) => {
-    //     console.log(socket.request);
-    //     sessionMiddleware(socket.request, socket.request.res, next);
-    // });
-
     workspace.on('connection', (socket) => {
-        const req = socket.request;
-        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-        console.log('워크스페이스 접속!', ip, socket.id, req.ip);
+        console.log('워크스페이스 접속!');
         socket.on('disconnect', () => {
-            console.log('클라이언트 접속 해제', ip, socket.id);
+            console.log('클라이언트 접속 해제');
             clearInterval(socket.interval);
         });
         socket.on('error', (error) => {
             console.error(error);
-        });
-        socket.on('reply', (data) => {
-            console.log(data);
         });
     });
 
     chat.on('connection', (socket) => {
-        const req = socket.request;
-        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-        console.log('Chat 접속!', ip, socket.id, req.ip);
+        console.log('Chat 접속!');
         socket.on('disconnect', () => {
             clearInterval(socket.interval);
         });
         socket.on('error', (error) => {
             console.error(error);
         });
-        socket.on('reply', (data) => {
-            console.log(data);
+        socket.on('chat', async (data) => {
+            const { dmsId, userId, chat } = data;
+            const result = await Chat.create({
+                dmsId,
+                userId,
+                chat,
+            });
+            io.of('chat').emit("receive", result);
         });
     });
 

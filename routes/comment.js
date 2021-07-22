@@ -13,7 +13,7 @@ router.get('/:postId', async (req, res) => {
             },
             order: [['createdAt', 'DESC']]
         });
-        console.log(comments);
+
         res.json({ ok: true, result: comments });
     } catch (error) {
         console.error(error);
@@ -91,7 +91,6 @@ async function permissionCheck(commentId, userId) {
             id: commentId
         }
     });
-    console.log(userId, comment.userId);
     if (userId !== comment.userId) return false;
     return true;
 }
