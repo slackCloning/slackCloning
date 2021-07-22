@@ -12,7 +12,6 @@ const { sequelize } = require('./models');
 const { swaggerUi, specs } = require('./swagger/swagger');
 const userRouter = require('./routes/users');
 const channelRouter = require('./routes/channel');
-const postRouter = require('./routes/post');
 const commentRouter = require('./routes/comment');
 const chatRouter = require('./routes/chat');
 const passportConfig = require('./passport');
