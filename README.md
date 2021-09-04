@@ -1,7 +1,7 @@
 # :pushpin: slackClone
 >슬랙이라는 서비스를 참고해서, 실시간으로 게시물을 올리고, 다른 사용자와 채팅을 할 수 있는 서비스.
 >
->http://seanstainability.s3-website.ap-northeast-2.amazonaws.com
+>https://www.youtube.com/watch?v=EWZuECDrffc&list=LL&index=3
 
 </br>
 
